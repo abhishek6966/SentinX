@@ -1,0 +1,212 @@
+# =============================================================================
+# SentinX — GitHub Actions CI/CD Pipeline
+# Runs on every PR: lint + type-check + tests
+# On merge to main: deploys backend to Hostinger SSH + frontend to Vercel
+# =============================================================================
+
+name: SentinX CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  # ─── CI: Lint + Type-check + Test ──────────────────────────────────────────
+  ci:
+    name: CI — Lint, Types, Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --workspaces
+
+      - name: Type-check (all workspaces)
+        run: npm run type-check --workspaces --if-present
+
+      - name: Lint
+        run: npm run lint --workspaces --if-present
+
+      - name: Build shared package
+        run: npm run build --workspace=shared
+
+      - name: Run tests
+        run: npm run test --workspaces --if-present
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test@localhost:5432/sentinx_test
+          MONGODB_URI: mongodb://localhost:27017/sentinx_test
+          REDIS_URL: redis://localhost:6379
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: sentinx_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+  # ─── Deploy Frontend (Vercel) ───────────────────────────────────────────────
+  deploy-frontend:
+    name: Deploy Frontend → Vercel
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./frontend
+
+      - name: Build frontend
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./frontend
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./frontend
+
+  # ─── Deploy Backend → Hostinger SSH ────────────────────────────────────────
+  deploy-backend:
+    name: Deploy Backend → Hostinger VPS
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Build backend + workers
+        run: |
+          npm ci --workspaces
+          npm run build --workspace=shared
+          npm run build --workspace=backend
+          npm run build --workspace=workers
+
+      - name: Deploy via SSH to Hostinger
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          port: ${{ secrets.HOSTINGER_PORT || 22 }}
+          script: |
+            set -e
+            echo "=== SentinX Deployment Starting ==="
+
+            cd /home/${{ secrets.HOSTINGER_USER }}/sentinx
+
+            # Pull latest code
+            git pull origin main
+
+            # Install dependencies
+            npm ci --workspaces --omit=dev
+
+            # Build all packages
+            npm run build --workspace=shared
+            npm run build --workspace=backend
+            npm run build --workspace=workers
+
+            # Run database migrations
+            cd backend && npx drizzle-kit push:pg && cd ..
+
+            # Restart services via PM2
+            pm2 reload sentinx-api --update-env || pm2 start backend/dist/server.js \
+              --name sentinx-api \
+              --instances 2 \
+              --exec-mode cluster \
+              --max-memory-restart 512M \
+              --env production
+
+            pm2 reload sentinx-workers --update-env || pm2 start workers/dist/index.js \
+              --name sentinx-workers \
+              --instances 1 \
+              --max-memory-restart 256M \
+              --env production
+
+            pm2 save
+
+            echo "=== Deployment Complete ==="
+            pm2 list
+
+      - name: Health check
+        run: |
+          sleep 10
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.HOSTINGER_HOST }}/health)
+          if [ "$STATUS" != "200" ]; then
+            echo "Health check failed with status $STATUS"
+            exit 1
+          fi
+          echo "Health check passed ✓"
+
+  # ─── Preview Deployments (PRs) ──────────────────────────────────────────────
+  preview:
+    name: Deploy Preview → Vercel
+    needs: ci
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy preview
+        id: deploy
+        run: |
+          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "preview_url=$URL" >> $GITHUB_OUTPUT
+        working-directory: ./frontend
+
+      - name: Comment preview URL on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 **Frontend Preview:** ${{ steps.deploy.outputs.preview_url }}`
+            })
