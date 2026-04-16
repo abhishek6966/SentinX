@@ -86,7 +86,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {/* User */}
         <div className="p-4 border-t border-surface-border flex items-center gap-3">
-          <UserButton afterSignOutUrl="/sign-in" />
+          <UserButton />
           <div className="text-xs text-gray-500 min-w-0">
             <div className="text-white text-sm truncate">Account</div>
           </div>

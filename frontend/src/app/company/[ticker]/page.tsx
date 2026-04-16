@@ -51,9 +51,9 @@ export default function CompanyPage({ params }: { params: { ticker: string } }) 
   const { data: holdingData, isLoading: holdingLoading } = useQuery({
     queryKey: ['holding-detail', ticker],
     queryFn: async () => {
-      const portfolio: any[] = await api.getPortfolio();
+      const portfolio = (await api.getPortfolio()) as any[];
       const match = portfolio?.find((h: any) => h.ticker === ticker);
-      if (match) return api.getHolding(match.id);
+      if (match) return (await api.getHolding(match.id)) as any;
       return null;
     },
   });
@@ -75,18 +75,19 @@ export default function CompanyPage({ params }: { params: { ticker: string } }) 
 
   const generateMutation = useMutation({
     mutationFn: async () => {
-      if (!holdingData?.holding?.id) throw new Error('No holding found');
-      return api.generateReport(holdingData.holding.id);
+      const hd = holdingData as any;
+      if (!hd?.holding?.id) throw new Error('No holding found');
+      return api.generateReport(hd.holding.id);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['holding-detail', ticker] });
     },
   });
 
-  const holding = holdingData?.holding;
-  const quote = holdingData?.quote;
-  const overview = holdingData?.overview;
-  const latestReport = holdingData?.recentReports?.[0];
+  const holding = (holdingData as any)?.holding;
+  const quote = (holdingData as any)?.quote;
+  const overview = (holdingData as any)?.overview;
+  const latestReport = (holdingData as any)?.recentReports?.[0];
   const signals: any[] = (signalsData as any)?.signals || [];
   const cssScore = (signalsData as any)?.cssScore;
   const bars: any[] = (historyData as any) || [];

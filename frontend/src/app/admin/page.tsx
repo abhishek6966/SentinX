@@ -204,7 +204,8 @@ export default function AdminPage() {
               <div className="stat-label mb-4">RECENT REPORTS</div>
               <div className="space-y-2">
                 {((analyticsData as any)?.recentReports || []).slice(0, 15).map((r: any, i: number) => {
-                  const color = { BUY: '#22c55e', SELL: '#ef4444', HOLD: '#f59e0b', MONITOR: '#3b82f6' }[r.recommendation] || '#6b7280';
+                  const recommendation = r.recommendation as 'BUY' | 'SELL' | 'HOLD' | 'MONITOR';
+                  const color = { BUY: '#22c55e', SELL: '#ef4444', HOLD: '#f59e0b', MONITOR: '#3b82f6' }[recommendation] || '#6b7280';
                   return (
                     <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-elevated text-sm">
                       <div className="flex items-center gap-3">

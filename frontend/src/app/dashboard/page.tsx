@@ -9,10 +9,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { createAPIClient } from '@/lib/apiClient';
 import { PortfolioCard } from '@/components/portfolio/PortfolioCard';
-import { GlobalHealthBar } from '@/components/portfolio/GlobalHealthBar';
-import { AddHoldingModal } from '@/components/portfolio/AddHoldingModal';
-import { DashboardSkeleton } from '@/components/ui/DashboardSkeleton';
-import { Disclaimer } from '@/components/ui/Disclaimer';
+import {
+  GlobalHealthBar,
+  AddHoldingModal,
+  DashboardSkeleton,
+  Disclaimer,
+} from '@/components/portfolio/index';
+
 import {
   TrendingUp, TrendingDown, Plus, Filter, RefreshCw,
   LayoutGrid, BarChart2, AlertTriangle,
@@ -158,7 +161,11 @@ export default function DashboardPage() {
               }`}
               style={
                 filter === fb.key
-                  ? { background: fb.color ? `${fb.color}20`, borderColor: `${fb.color}60`, color: fb.color }
+                  ? {
+                      backgroundColor: fb.color ? `${fb.color}20` : undefined,
+                      borderColor: fb.color ? `${fb.color}60` : undefined,
+                      color: fb.color,
+                    }
                   : {}
               }
             >
