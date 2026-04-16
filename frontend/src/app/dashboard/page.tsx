@@ -42,7 +42,7 @@ export default function DashboardPage() {
     refetchInterval: 30_000,
   });
 
-  const holdings = (portfolio as any[]) || [];
+  const holdings = useMemo(() => (portfolio as any[]) || [], [portfolio]);
 
   // Global weighted CSS score
   const globalCSS = useMemo(() => {
