@@ -9,7 +9,7 @@
     "db:migrate": "drizzle-kit push",
     "db:seed": "ts-node src/db/seed.ts",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src",
     "test": "echo 'No tests defined in backend'"
   },
   "dependencies": {
