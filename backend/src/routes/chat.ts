@@ -63,7 +63,7 @@ async function callGroq(apiKey: string, model: string, system: string, messages:
   });
 
   if (!res.ok) throw new Error(`Groq API error: ${res.status}`);
-  const data = await res.json();
+  const data = (await res.json()) as any;
   return data.choices?.[0]?.message?.content || 'No response generated.';
 }
 
@@ -88,7 +88,7 @@ async function callGemini(apiKey: string, model: string, system: string, message
   );
 
   if (!res.ok) throw new Error(`Gemini API error: ${res.status}`);
-  const data = await res.json();
+  const data = (await res.json()) as any;
   return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
 }
 

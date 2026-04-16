@@ -34,9 +34,9 @@ export const authMiddleware = [
 
       if (!user) {
         // Auto-provision on first authenticated request
-        const clerkUser = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
+        const clerkUser = (await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
           headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` },
-        }).then((r) => r.json());
+        }).then((r) => r.json())) as any;
 
         [user] = await db
           .insert(users)

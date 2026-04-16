@@ -44,7 +44,7 @@ async function fetchPolygonQuote(ticker: string): Promise<StockQuote> {
   const res = await fetch(snapUrl, { signal: AbortSignal.timeout(5000) });
   if (!res.ok) throw new Error(`Polygon ${res.status}`);
 
-  const data = await res.json();
+  const data = (await res.json()) as any;
   const snap = data.ticker;
   const day = snap?.day;
   const prevDay = snap?.prevDay;
@@ -69,7 +69,7 @@ async function fetchAlphaVantageQuote(ticker: string): Promise<StockQuote> {
   const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
   if (!res.ok) throw new Error(`Alpha Vantage ${res.status}`);
 
-  const data = await res.json();
+  const data = (await res.json()) as any;
   const q = data['Global Quote'];
   if (!q || !q['05. price']) throw new Error('Alpha Vantage: invalid response');
 
@@ -105,7 +105,7 @@ export async function getHistoricalBars(
   const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error(`Polygon historical ${res.status}`);
 
-  const data = await res.json();
+  const data = (await res.json()) as any;
   const bars: OHLCVBar[] = (data.results || []).map((r: any) => ({
     date: new Date(r.t).toISOString().split('T')[0],
     open: r.o,
@@ -130,7 +130,7 @@ export async function getCompanyOverview(ticker: string) {
   const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
   if (!res.ok) throw new Error(`Alpha Vantage overview ${res.status}`);
 
-  const data = await res.json();
+  const data = (await res.json()) as any;
   if (!data.Symbol) throw new Error('Invalid company overview response');
 
   const overview = {

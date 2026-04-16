@@ -2,14 +2,14 @@
 // SentinX — Database Connection Manager
 // PostgreSQL via Supabase (Drizzle ORM) + MongoDB Atlas
 // =============================================================================
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import mongoose from 'mongoose';
 import { logger } from '../utils/logger';
 import * as schema from '../db/schema';
 
 let pgPool: Pool;
-export let db: ReturnType<typeof drizzle>;
+export let db: NodePgDatabase<typeof schema>;
 
 export async function connectDatabases(): Promise<void> {
   await connectPostgres();

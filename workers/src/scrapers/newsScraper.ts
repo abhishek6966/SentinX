@@ -19,7 +19,7 @@ export async function ingestNewsArticles(ticker: string, companyName: string): P
 
   const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error(`NewsAPI ${res.status}`);
-  const data = await res.json();
+  const data = (await res.json()) as any;
 
   if (data.status !== 'ok') throw new Error(`NewsAPI error: ${data.message}`);
 

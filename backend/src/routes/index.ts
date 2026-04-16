@@ -39,7 +39,7 @@ signalsRouter.get('/:ticker', async (req, res, next) => {
 import { Router as ReportsRouter } from 'express';
 import { db } from '../config/database';
 import { stockReports, portfolioHoldings } from '../db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, asc } from 'drizzle-orm';
 
 export const reportsRouter = ReportsRouter();
 
@@ -49,8 +49,10 @@ reportsRouter.get('/', async (req, res, next) => {
     const userId = req.userId!;
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    let query = db.select().from(stockReports).where(eq(stockReports.userId, userId));
-    if (ticker) query = query.where(eq(stockReports.ticker, ticker.toUpperCase())) as any;
+    const conditions = [eq(stockReports.userId, userId)];
+    if (ticker) conditions.push(eq(stockReports.ticker, ticker.toUpperCase()));
+
+    let query = db.select().from(stockReports).where(and(...conditions));
 
     const reports = await (query as any).orderBy(desc(stockReports.createdAt))
       .offset(skip).limit(parseInt(limit));
@@ -102,7 +104,6 @@ stockRouter.get('/:ticker/overview', async (req, res, next) => {
 // ── alerts.ts ─────────────────────────────────────────────────────────────────
 import { Router as AlertsRouter } from 'express';
 import { portfolioHoldings as ph } from '../db/schema';
-import { eq as eqA } from 'drizzle-orm';
 import { scheduleAlert as sa } from '../services/schedulerService';
 
 export const alertsRouter = AlertsRouter();
@@ -115,7 +116,7 @@ alertsRouter.patch('/:holdingId', async (req, res, next) => {
 
     const [updated] = await db.update(ph)
       .set({ alertEnabled, alertFrequency, emailSections, updatedAt: new Date() })
-      .where(and(eqA(ph.id, holdingId), eqA(ph.userId, userId)))
+      .where(and(eq(ph.id, holdingId), eq(ph.userId, userId)))
       .returning();
 
     if (!updated) return res.status(404).json({ success: false, error: 'Holding not found' });
@@ -148,7 +149,6 @@ authRouter.get('/me', async (req, res, next) => {
 // ── webhooks.ts ───────────────────────────────────────────────────────────────
 import { Router as WebhookRouter } from 'express';
 import { users } from '../db/schema';
-import { eq } from 'drizzle-orm';
 import { logger } from '../utils/logger';
 
 export const webhooksRouter = WebhookRouter();

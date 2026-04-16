@@ -31,7 +31,7 @@ async function getRedditToken(): Promise<string> {
     body: 'grant_type=client_credentials',
   });
 
-  const data = await res.json();
+  const data = (await res.json()) as any;
   redditToken = data.access_token;
   tokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
   return redditToken!;
@@ -60,7 +60,7 @@ export async function ingestRedditPosts(ticker: string): Promise<number> {
     });
 
     if (!res.ok) continue;
-    const data = await res.json();
+    const data = (await res.json()) as any;
     const posts = data.data?.children || [];
 
     for (const { data: post } of posts) {

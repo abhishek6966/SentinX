@@ -69,23 +69,25 @@ export async function sendReportEmail(reportId: string, userId: string): Promise
 }
 
 function buildEmailSubject(report: any): string {
+  const recommendation = report.recommendation as 'BUY' | 'SELL' | 'HOLD' | 'MONITOR';
   const emoji = {
     BUY: '🟢',
     SELL: '🔴',
     HOLD: '🟡',
     MONITOR: '🔵',
-  }[report.recommendation] || '📊';
+  }[recommendation] || '📊';
 
   return `${emoji} ${report.ticker}: ${report.recommendation} — SentinX Intelligence Briefing`;
 }
 
 function buildEmailHTML(report: any, holding: any, user: any, sections: any): string {
+  const recommendation = report.recommendation as 'BUY' | 'SELL' | 'HOLD' | 'MONITOR';
   const recommendationColor = {
     BUY: '#22c55e',
     SELL: '#ef4444',
     HOLD: '#f59e0b',
     MONITOR: '#3b82f6',
-  }[report.recommendation] || '#6b7280';
+  }[recommendation] || '#6b7280';
 
   const cssScorePercent = Math.round((report.cssScore.score + 1) * 50); // -1..1 → 0..100
 
