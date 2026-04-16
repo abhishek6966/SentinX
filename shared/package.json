@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'No lint needed for shared'"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

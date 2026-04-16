@@ -263,7 +263,7 @@ export default function CompanyPage({ params }: { params: { ticker: string } }) 
                         <div className="grid grid-cols-2 gap-4 mb-5">
                           <div className="p-4 rounded-xl bg-surface-elevated">
                             <div className="stat-label mb-2">Your Thesis</div>
-                            <p className="text-gray-400 text-sm italic leading-relaxed">"{holding?.investmentThesis}"</p>
+                            <p className="text-gray-400 text-sm italic leading-relaxed">&quot;{holding?.investmentThesis}&quot;</p>
                           </div>
                           <div className="p-4 rounded-xl bg-surface-elevated">
                             <div className="stat-label mb-2">AI Assessment</div>
@@ -328,7 +328,7 @@ export default function CompanyPage({ params }: { params: { ticker: string } }) 
                                 <div className="text-xs text-gray-600 mt-0.5">
                                   {c.source} · {new Date(c.publishedAt).toLocaleDateString()}
                                 </div>
-                                <div className="text-xs text-gray-500 mt-1 italic">"{c.excerpt}"</div>
+                                <div className="text-xs text-gray-500 mt-1 italic">&quot;{c.excerpt}&quot;</div>
                               </div>
                             </div>
                           ))}

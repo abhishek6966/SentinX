@@ -52,7 +52,7 @@ reportsRouter.get('/', async (req, res, next) => {
     const conditions = [eq(stockReports.userId, userId)];
     if (ticker) conditions.push(eq(stockReports.ticker, ticker.toUpperCase()));
 
-    let query = db.select().from(stockReports).where(and(...conditions));
+    const query = db.select().from(stockReports).where(and(...conditions));
 
     const reports = await (query as any).orderBy(desc(stockReports.createdAt))
       .offset(skip).limit(parseInt(limit));

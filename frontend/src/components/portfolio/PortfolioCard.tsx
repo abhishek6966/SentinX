@@ -117,7 +117,7 @@ export function PortfolioCard({ holding }: PortfolioCardProps) {
         {/* ── Thesis Preview ── */}
         {holding.investmentThesis && (
           <div className="text-xs text-gray-600 italic leading-relaxed line-clamp-2 border-t border-surface-border pt-3">
-            "{holding.investmentThesis.slice(0, 100)}{holding.investmentThesis.length > 100 ? '…' : ''}"
+            &quot;{holding.investmentThesis.slice(0, 100)}{holding.investmentThesis.length > 100 ? '…' : ''}&quot;
           </div>
         )}
 
