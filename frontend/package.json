@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "echo 'No tests defined in frontend'"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.2.2",

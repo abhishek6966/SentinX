@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
-    "lint": "echo 'No lint needed for workers'"
+    "lint": "echo 'No lint needed for workers'",
+    "test": "echo 'No tests defined in workers'"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^2.2.2",
