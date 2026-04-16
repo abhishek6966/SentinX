@@ -142,7 +142,7 @@ jobs:
             git pull origin main
 
             # Install dependencies
-          npm ci --legacy-peer-deps --omit=dev
+            npm ci --legacy-peer-deps --omit=dev
 
             # Build all packages
             npm run build --workspace=shared
