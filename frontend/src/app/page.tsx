@@ -183,7 +183,7 @@ export default function RootPage() {
             <motion.p
               {...fadeInUp}
               transition={{ ...fadeInUp.transition, delay: 0.2 }}
-              className="text-gray-500 text-xl lg:text-2xl max-w-3xl mx-auto mb-14 leading-relaxed font-medium"
+              className="text-gray-600 text-xl lg:text-3xl max-w-3xl mx-auto mb-14 leading-relaxed font-bold"
             >
               The first AI-native equity terminal designed to monitor your thesis, 
               uncover alpha signals, and protect your wealth 24/7.
@@ -247,10 +247,10 @@ export default function RootPage() {
                                  border border-blue-100 group-hover:bg-blue-600 transition-all shadow-sm`}>
                   <feature.icon className="text-blue-600 group-hover:text-white transition-colors" size={32} />
                 </div>
-                <h3 className="text-2xl font-bold mb-5 tracking-tight text-gray-900">{feature.title}</h3>
-                <p className="text-gray-500 leading-relaxed font-semibold text-lg">{feature.desc}</p>
-                <div className="mt-10 pt-8 border-t border-gray-100 flex items-center gap-3 text-[11px] font-black tracking-widest text-blue-600 uppercase">
-                  <CheckCircle2 size={14} /> Systems Active
+                <h3 className="text-3xl font-black mb-5 tracking-tighter text-gray-900">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed font-bold text-lg">{feature.desc}</p>
+                <div className="mt-10 pt-8 border-t border-gray-100 flex items-center gap-3 text-xs font-black tracking-widest text-[#2563eb] uppercase">
+                  <CheckCircle2 size={16} /> Systems Active
                 </div>
               </motion.div>
             ))}
