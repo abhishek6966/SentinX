@@ -25,6 +25,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <style>{`
+          body { background-color: #05060a !important; color: white !important; margin: 0; padding: 0; font-family: sans-serif; }
+          * { box-sizing: border-box; }
+        `}</style>
+      </head>
       <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-[#05060a] font-sans text-white antialiased`}>
         <ClerkProvider 
           signInUrl="/sign-in" 
