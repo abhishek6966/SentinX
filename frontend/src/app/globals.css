@@ -21,15 +21,15 @@
 
 @layer components {
   .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-black/5 shadow-sm;
+    @apply bg-white/70 backdrop-blur-xl border border-black/10 shadow-sm;
   }
   
   .glass-elevated {
-    @apply bg-white/90 backdrop-blur-2xl border border-black/10 shadow-2xl;
+    @apply bg-white/95 backdrop-blur-2xl border border-black/20 shadow-2xl;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-gray-900 via-gray-800 to-gray-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-gray-900 via-gray-800 to-gray-600;
   }
 
   .text-accent-gradient {

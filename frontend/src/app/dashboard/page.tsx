@@ -100,11 +100,11 @@ export default function DashboardPage() {
         className="flex items-start justify-between mb-8 gap-4 flex-wrap"
       >
         <div>
-          <div className="stat-label mb-2">PORTFOLIO COMMAND CENTRE</div>
-          <h1 className="font-display text-3xl lg:text-4xl font-bold text-white tracking-tight">
+          <div className="text-[10px] font-black tracking-widest text-[#2563eb] mb-2 uppercase">PORTFOLIO COMMAND CENTRE</div>
+          <h1 className="font-display text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">
             Equity Pulse
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-600 font-medium text-sm mt-1">
             {holdings.length} positions tracked · Updated every 15s
           </p>
         </div>
@@ -113,16 +113,16 @@ export default function DashboardPage() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-surface-border
-                       text-gray-400 hover:text-white hover:border-gray-600 transition-all text-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200
+                       text-gray-600 hover:text-blue-600 hover:border-blue-200 transition-all text-sm font-bold bg-white"
           >
             <RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />
             Refresh
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-blue hover:bg-blue-500
-                       text-white font-medium text-sm transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700
+                       text-white font-bold text-sm transition-all shadow-lg shadow-blue-500/20"
           >
             <Plus size={14} />
             Add Holding
@@ -148,22 +148,22 @@ export default function DashboardPage() {
         className="flex items-center justify-between gap-4 mb-6 flex-wrap"
       >
         <div className="flex items-center gap-2 flex-wrap">
-          <Filter size={14} className="text-gray-500" />
+          <Filter size={14} className="text-gray-400" />
           {filterButtons.map((fb) => (
             <button
               key={fb.key}
               onClick={() => setFilter(fb.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wider uppercase
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase
                           border transition-all ${
                 filter === fb.key
-                  ? 'border-transparent text-white'
-                  : 'border-surface-border text-gray-500 hover:text-white hover:border-gray-600'
+                  ? 'border-transparent'
+                  : 'border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-200 bg-white'
               }`}
               style={
                 filter === fb.key
                   ? {
-                      backgroundColor: fb.color ? `${fb.color}20` : undefined,
-                      borderColor: fb.color ? `${fb.color}60` : undefined,
+                      backgroundColor: fb.color ? `${fb.color}15` : undefined,
+                      borderColor: fb.color ? `${fb.color}40` : undefined,
                       color: fb.color,
                     }
                   : {}
@@ -177,7 +177,7 @@ export default function DashboardPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as any)}
-          className="bg-surface-card border border-surface-border text-gray-400 text-xs
+          className="bg-white border border-gray-200 text-gray-600 text-xs font-bold
                      rounded-lg px-3 py-2 outline-none cursor-pointer"
         >
           <option value="css">Sort: Sentiment Score</option>
