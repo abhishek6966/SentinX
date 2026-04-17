@@ -19,6 +19,16 @@ export default function RootPage() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
   const [showDemo, setShowDemo] = (require('react')).useState(false);
+  const [demoStep, setDemoStep] = (require('react')).useState(0);
+
+  useEffect(() => {
+    if (showDemo) {
+      const timer = setTimeout(() => setDemoStep(1), 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setDemoStep(0);
+    }
+  }, [showDemo]);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -45,16 +55,48 @@ export default function RootPage() {
               className="relative aspect-video w-full max-w-5xl bg-surface-card rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(59,130,246,0.3)] border border-white/10"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-tr from-accent-blue/10 to-purple-500/10">
-                <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-                   <Zap size={40} className="text-accent-blue animate-pulse" />
-                </div>
-                <h2 className="text-4xl font-display font-bold tracking-tighter">SentinX Terminal Demo</h2>
-                <p className="text-gray-400 mt-3 font-mono text-sm tracking-widest uppercase">Initializing Neural Link...</p>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-tr from-accent-blue/10 to-purple-500/10 p-12 text-center">
+                <AnimatePresence mode="wait">
+                  {demoStep === 0 ? (
+                    <motion.div 
+                      key="loading"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.1 }}
+                      className="flex flex-col items-center"
+                    >
+                      <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                         <Zap size={40} className="text-accent-blue animate-pulse" />
+                      </div>
+                      <h2 className="text-4xl font-display font-bold tracking-tighter">SentinX Terminal Demo</h2>
+                      <p className="text-gray-400 mt-3 font-mono text-sm tracking-widest uppercase animate-pulse">Initializing Neural Link...</p>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="success"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="max-w-md"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center mb-6 mx-auto">
+                        <CheckCircle2 size={32} />
+                      </div>
+                      <h2 className="text-3xl font-display font-bold tracking-tighter mb-4">Neural Interface Ready</h2>
+                      <p className="text-gray-400 mb-8 leading-relaxed">
+                        Experience the power of AI-driven equity intelligence. Your dashboard is ready to track your first thesis.
+                      </p>
+                      <Link href="/sign-up">
+                        <button className="w-full py-4 rounded-xl bg-accent-blue font-bold text-white hover:bg-blue-500 transition-all shadow-xl shadow-blue-500/20">
+                          Start Your Journey Now
+                        </button>
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <button 
                 onClick={() => setShowDemo(false)}
-                className="absolute top-8 right-8 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-all text-2xl font-light"
+                className="absolute top-8 right-8 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-all text-2xl font-light z-50"
               >
                 &times;
               </button>
