@@ -18,6 +18,7 @@ const fadeInUp = {
 export default function RootPage() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
+  const [showDemo, setShowDemo] = (require('react')).useState(false);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
@@ -27,6 +28,41 @@ export default function RootPage() {
 
   return (
     <div className="min-h-screen bg-[#05060a] text-white selection:bg-accent-blue/30 selection:text-accent-blue">
+      {/* ── Demo Modal ── */}
+      <AnimatePresence>
+        {showDemo && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl"
+            onClick={() => setShowDemo(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative aspect-video w-full max-w-5xl bg-surface-card rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(59,130,246,0.3)] border border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-tr from-accent-blue/10 to-purple-500/10">
+                <div className="w-24 h-24 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                   <Zap size={40} className="text-accent-blue animate-pulse" />
+                </div>
+                <h2 className="text-4xl font-display font-bold tracking-tighter">SentinX Terminal Demo</h2>
+                <p className="text-gray-400 mt-3 font-mono text-sm tracking-widest uppercase">Initializing Neural Link...</p>
+              </div>
+              <button 
+                onClick={() => setShowDemo(false)}
+                className="absolute top-8 right-8 w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-all text-2xl font-light"
+              >
+                &times;
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Background Elements ── */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <motion.div 
@@ -122,8 +158,11 @@ export default function RootPage() {
                   Join SentinX Elite <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <button className="w-full sm:w-auto px-10 py-5 rounded-2xl glass hover:bg-white/10 text-white font-display font-bold 
-                                 transition-all flex items-center justify-center gap-3 border border-white/10 text-lg">
+              <button 
+                onClick={() => setShowDemo(true)}
+                className="w-full sm:w-auto px-10 py-5 rounded-2xl glass hover:bg-white/10 text-white font-display font-bold 
+                                   transition-all flex items-center justify-center gap-3 border border-white/10 text-lg"
+              >
                 <Play size={18} className="fill-white" /> Watch Demo
               </button>
             </motion.div>
