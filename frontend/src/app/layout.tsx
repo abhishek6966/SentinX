@@ -26,7 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-surface text-white antialiased`}>
-        <ClerkProvider>
+        <ClerkProvider 
+          signInUrl="/sign-in" 
+          signUpUrl="/sign-up"
+          afterSignInUrl="/dashboard"
+          afterSignUpUrl="/dashboard"
+        >
           <header className="flex justify-end items-center p-4 gap-4 h-16 border-b border-surface-border">
             <Show when="signed-out">
               <SignInButton />
