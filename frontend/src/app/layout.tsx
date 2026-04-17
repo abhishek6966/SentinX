@@ -29,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClerkProvider 
           signInUrl="/sign-in" 
           signUpUrl="/sign-up"
-          fallbackRedirectUrl="/dashboard"
+          signInFallbackRedirectUrl="/dashboard"
+          signUpFallbackRedirectUrl="/dashboard"
         >
           <header className="flex justify-end items-center p-4 gap-4 h-16 border-b border-surface-border">
             <Show when="signed-out">
