@@ -25,26 +25,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-surface text-white antialiased`}>
+      <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-[#05060a] font-sans text-white antialiased`}>
         <ClerkProvider 
           signInUrl="/sign-in" 
           signUpUrl="/sign-up"
           signInFallbackRedirectUrl="/dashboard"
           signUpFallbackRedirectUrl="/dashboard"
         >
-          <header className="flex justify-end items-center p-4 gap-4 h-16 border-b border-surface-border">
-            <Show when="signed-out">
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-purple-700 text-white rounded-full font-medium text-sm px-4 py-2 cursor-pointer hover:bg-purple-600 transition-colors">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </Show>
-            <Show when="signed-in">
-              <UserButton />
-            </Show>
-          </header>
           <Providers>{children}</Providers>
         </ClerkProvider>
       </body>
