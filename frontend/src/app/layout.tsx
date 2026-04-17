@@ -24,19 +24,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <style>{`
-          body { background-color: #05060a !important; color: white !important; margin: 0; padding: 0; font-family: sans-serif; }
+          body { background-color: #f8fafc !important; color: #020617 !important; margin: 0; padding: 0; font-family: sans-serif; }
           * { box-sizing: border-box; }
         `}</style>
       </head>
-      <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-[#05060a] font-sans text-white antialiased`}>
+      <body className={`${syne.variable} ${jetbrains.variable} ${inter.variable} bg-[#f8fafc] font-sans text-[#020617] antialiased`}>
         <ClerkProvider 
           signInUrl="/sign-in" 
           signUpUrl="/sign-up"
           signInFallbackRedirectUrl="/dashboard"
           signUpFallbackRedirectUrl="/dashboard"
+          appearance={{
+            elements: {
+              card: "shadow-none border border-gray-100",
+              formButtonPrimary: "bg-blue-600 hover:bg-blue-700",
+              footerActionLink: "text-blue-600 hover:text-blue-700 font-bold",
+            }
+          }}
         >
           <Providers>{children}</Providers>
         </ClerkProvider>
