@@ -28,10 +28,31 @@ export default function RootPage() {
   return (
     <div className="min-h-screen bg-[#05060a] text-white selection:bg-accent-blue/30 selection:text-accent-blue">
       {/* ── Background Elements ── */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent-blue rounded-full blur-[150px] opacity-[0.08]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full blur-[150px] opacity-[0.05]" />
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.08, 0.12, 0.08],
+            x: [0, 50, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-accent-blue rounded-full blur-[180px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.05, 0.08, 0.05],
+            x: [0, -40, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-600 rounded-full blur-[180px]" 
+        />
         <div className="absolute inset-0 bg-grid opacity-[0.4]" />
+        
+        {/* Animated Spotlight */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.1)_0%,transparent_50%)]" />
       </div>
 
       {/* ── Navbar ── */}
