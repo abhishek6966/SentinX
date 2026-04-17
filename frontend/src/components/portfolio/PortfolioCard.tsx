@@ -39,19 +39,19 @@ export function PortfolioCard({ holding }: PortfolioCardProps) {
       <motion.div
         whileHover={{ y: -3, scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="glass-card p-5 cursor-pointer h-full flex flex-col gap-4 relative overflow-hidden
-                   hover:border-gray-700 transition-colors group"
+        className="bg-white p-6 cursor-pointer h-full flex flex-col gap-4 relative overflow-hidden
+                   border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-gray-200/50 hover:border-blue-200 transition-all group"
       >
         {/* Glow overlay on hover */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-          style={{ background: recConfig ? `radial-gradient(ellipse at top right, ${recConfig.color}08, transparent 60%)` : '' }}
+          style={{ background: recConfig ? `radial-gradient(ellipse at top right, ${recConfig.color}10, transparent 60%)` : '' }}
         />
 
         {/* ── Top Row: Ticker + Rec Badge ── */}
         <div className="flex items-start justify-between">
           <div>
-            <div className="font-mono text-xl font-bold text-white tracking-wider">{ticker}</div>
-            <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[140px]">
+            <div className="font-display text-2xl font-black text-gray-900 tracking-tighter">{ticker}</div>
+            <div className="text-xs font-bold text-gray-400 mt-1 truncate max-w-[140px] uppercase tracking-tight">
               {holding.companyName}
             </div>
           </div>
@@ -59,7 +59,7 @@ export function PortfolioCard({ holding }: PortfolioCardProps) {
             <motion.span
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="text-xs font-bold tracking-widest px-2.5 py-1 rounded-full border"
+              className="text-xs font-black tracking-widest px-3 py-1.5 rounded-full border shadow-sm"
               style={{ color: recConfig.color, background: recConfig.bg, borderColor: recConfig.border }}
             >
               {rec}
@@ -70,69 +70,69 @@ export function PortfolioCard({ holding }: PortfolioCardProps) {
         {/* ── Price + P&L ── */}
         <div className="flex items-end justify-between">
           <div>
-            <div className="font-mono text-2xl font-bold text-white">
+            <div className="font-display text-3xl font-black text-gray-900">
               {currentPrice > 0 ? `$${currentPrice.toFixed(2)}` : '—'}
             </div>
-            <div className="text-xs text-gray-500 mt-0.5">
+            <div className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest">
               Entry: ${entry.toFixed(2)}
             </div>
           </div>
-          <div className={`flex items-center gap-1 text-sm font-semibold ${isPositive ? 'text-signal-buy' : 'text-signal-sell'}`}>
-            {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-            <div>
-              <div>{isPositive ? '+' : ''}{pnlPct.toFixed(2)}%</div>
-              <div className="text-xs opacity-70 text-right">
-                {isPositive ? '+' : ''}${pnlAbs.toFixed(0)}
-              </div>
+          <div className={`flex flex-col items-end gap-1 text-sm font-black ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+            <div className="flex items-center gap-1">
+              {isPositive ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+              <span>{isPositive ? '+' : ''}{pnlPct.toFixed(2)}%</span>
+            </div>
+            <div className="text-[10px] font-bold opacity-60">
+              {isPositive ? '+' : ''}${pnlAbs.toLocaleString(undefined, { maximumFractionDigits: 0 })}
             </div>
           </div>
         </div>
 
         {/* ── CSS Sentiment Gauge ── */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="stat-label">Sentiment</span>
-            <span className="font-mono text-xs" style={{ color: gaugeColor }}>
+        <div className="mt-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">SENTIMENT</span>
+            <span className="font-display font-black text-xs" style={{ color: gaugeColor }}>
               {cssScore?.score != null ? cssScore.score.toFixed(3) : '—'}
             </span>
           </div>
-          <div className="h-1.5 bg-surface-elevated rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-100 rounded-full overflow-hidden border border-gray-200/30">
             <motion.div
               initial={{ width: '50%' }}
               animate={{ width: `${cssNorm * 100}%` }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-              className="h-full rounded-full"
+              className="h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.05)]"
               style={{ background: gaugeColor }}
             />
           </div>
-          <div className="flex justify-between mt-1">
-            <span className="text-[10px] text-gray-600">Bear</span>
-            <span className="text-[10px] text-gray-500">
+          <div className="flex justify-between mt-2 text-[9px] font-bold text-gray-400 uppercase tracking-tight">
+            <span>Bear</span>
+            <span className="text-blue-500 font-black">
               {cssScore?.signalCount || 0} signals
             </span>
-            <span className="text-[10px] text-gray-600">Bull</span>
+            <span>Bull</span>
           </div>
         </div>
 
         {/* ── Thesis Preview ── */}
         {holding.investmentThesis && (
-          <div className="text-xs text-gray-600 italic leading-relaxed line-clamp-2 border-t border-surface-border pt-3">
+          <div className="text-xs text-gray-600 font-medium leading-relaxed line-clamp-2 border-t border-gray-50 pt-4 mt-2 italic">
             &quot;{holding.investmentThesis.slice(0, 100)}{holding.investmentThesis.length > 100 ? '…' : ''}&quot;
           </div>
         )}
 
         {/* ── Bottom Row: Last Updated ── */}
-        <div className="flex items-center justify-between text-[10px] text-gray-600 mt-auto">
-          <div className="flex items-center gap-1">
-            <Clock size={10} />
+        <div className="flex items-center justify-between text-[10px] text-gray-400 font-bold mt-auto pt-4 uppercase tracking-tighter">
+          <div className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
+            <Clock size={12} className="text-blue-500" />
             {holding.lastReportAt
-              ? `Report: ${new Date(holding.lastReportAt).toLocaleDateString()}`
-              : 'No report yet'}
+              ? `Update: ${new Date(holding.lastReportAt).toLocaleDateString()}`
+              : 'Syncing...'}
           </div>
           {latestReport?.confidenceScore && (
-            <div className="flex items-center gap-1">
-              <Zap size={10} />
-              {Math.round(Number(latestReport.confidenceScore) * 100)}% confidence
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-50 text-blue-600 font-black">
+              <Zap size={10} className="fill-blue-600" />
+              {Math.round(Number(latestReport.confidenceScore) * 100)}% Match
             </div>
           )}
         </div>

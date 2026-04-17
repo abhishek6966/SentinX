@@ -18,40 +18,40 @@ export function GlobalHealthBar({ cssScore, holdingCount }: { cssScore: number; 
   const label = pct >= 60 ? 'Portfolio Bullish' : pct <= 40 ? 'Portfolio Bearish' : 'Portfolio Neutral';
 
   return (
-    <div className="glass-card p-5">
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-3">
+    <div className="bg-white border border-gray-100 p-6 rounded-3xl shadow-xl shadow-gray-200/50">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
         <div>
-          <div className="stat-label mb-1">Portfolio Intelligence Score</div>
+          <div className="text-[10px] font-black tracking-widest text-blue-600 mb-2 uppercase">Portfolio Intelligence Score</div>
           <div className="flex items-baseline gap-3">
-            <span className="font-display text-3xl font-bold" style={{ color }}>
+            <span className="font-display text-4xl font-black" style={{ color }}>
               {cssScore.toFixed(3)}
             </span>
-            <span className="text-sm font-semibold" style={{ color }}>{label}</span>
+            <span className="text-sm font-bold uppercase tracking-tighter" style={{ color }}>{label}</span>
           </div>
         </div>
-        <div className="flex gap-6 text-center">
+        <div className="flex gap-8 text-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
           {[
             { label: 'Positions', value: holdingCount },
             { label: 'CSS Range', value: '-1.0 → +1.0' },
           ].map((s) => (
             <div key={s.label}>
-              <div className="font-mono text-lg font-bold text-white">{s.value}</div>
-              <div className="stat-label">{s.label}</div>
+              <div className="font-display text-xl font-black text-gray-900">{s.value}</div>
+              <div className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="h-2 bg-surface-elevated rounded-full overflow-hidden">
+      <div className="h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200/50">
         <motion.div
           initial={{ width: '50%' }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, type: 'spring' }}
           className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${color}80, ${color})` }}
+          style={{ background: `linear-gradient(90deg, ${color}60, ${color})` }}
         />
       </div>
-      <div className="flex justify-between mt-1 text-[10px] text-gray-600">
+      <div className="flex justify-between mt-2 text-[9px] font-bold text-gray-400 uppercase tracking-tight">
         <span>-1.0 Strongly Bearish</span>
         <span>0.0 Neutral</span>
         <span>+1.0 Strongly Bullish</span>
@@ -117,34 +117,35 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/80 backdrop-blur-xl"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 16 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="glass-card-elevated w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[32px] border border-gray-100 shadow-[0_40px_120px_rgba(0,0,0,0.1)]"
       >
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="font-display text-xl font-bold text-white">Add Holding</h2>
-              <p className="text-xs text-gray-500 mt-0.5">Document your investment thesis for AI tracking</p>
+              <h2 className="font-display text-3xl font-black text-gray-900 tracking-tight">Add Holding</h2>
+              <p className="text-sm text-gray-400 font-medium mt-1">AI-powered thesis tracking initialized</p>
             </div>
-            <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <button onClick={onClose} className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
               <X size={20} />
             </button>
           </div>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
               <Field label="Ticker *" placeholder="NVDA">
                 <input
                   value={form.ticker}
                   onChange={(e) => set('ticker', e.target.value.toUpperCase())}
                   maxLength={10}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                  placeholder="NVDA"
                 />
               </Field>
               <Field label="Entry Price *" placeholder="450.00">
@@ -152,7 +153,8 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
                   type="number" step="0.01" min="0"
                   value={form.entryPrice}
                   onChange={(e) => set('entryPrice', e.target.value)}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                  placeholder="450.00"
                 />
               </Field>
             </div>
@@ -161,24 +163,26 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
               <input
                 value={form.companyName}
                 onChange={(e) => set('companyName', e.target.value)}
-                className="modal-input"
+                className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                placeholder="NVIDIA Corporation"
               />
             </Field>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <Field label="Shares *" placeholder="10">
                 <input
                   type="number" step="0.001" min="0"
                   value={form.shares}
                   onChange={(e) => set('shares', e.target.value)}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                  placeholder="10"
                 />
               </Field>
               <Field label="Alert Frequency">
                 <select
                   value={form.alertFrequency}
                   onChange={(e) => set('alertFrequency', e.target.value)}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all cursor-pointer"
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
@@ -187,13 +191,14 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
               </Field>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <Field label="Target Price" placeholder="600.00">
                 <input
                   type="number" step="0.01" min="0"
                   value={form.targetPrice}
                   onChange={(e) => set('targetPrice', e.target.value)}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                  placeholder="600.00"
                 />
               </Field>
               <Field label="Stop Loss" placeholder="400.00">
@@ -201,55 +206,58 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
                   type="number" step="0.01" min="0"
                   value={form.stopLossPrice}
                   onChange={(e) => set('stopLossPrice', e.target.value)}
-                  className="modal-input"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-bold outline-none focus:border-blue-400 focus:bg-white transition-all"
+                  placeholder="400.00"
                 />
               </Field>
             </div>
 
             <Field
               label="Investment Thesis *"
-              hint="Why did you buy this stock? What would change your mind? (min 20 chars)"
+              hint="Minimum 20 characters required"
             >
               <textarea
                 value={form.investmentThesis}
                 onChange={(e) => set('investmentThesis', e.target.value)}
                 rows={4}
-                placeholder="e.g. NVIDIA is positioned to dominate AI accelerator market through its CUDA moat and H100/H200 GPU cycle. Thesis invalidated if AMD market share exceeds 20% or if major hyperscalers adopt custom chips exclusively."
-                className="modal-input resize-none"
+                placeholder="Why did you buy this stock? What would invalidate your thesis? e.g. 'Thesis invalidated if market share drops below 15%.'"
+                className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-900 font-medium outline-none focus:border-blue-400 focus:bg-white transition-all resize-none leading-relaxed"
               />
-              <div className="text-[10px] text-gray-600 mt-1 text-right">
-                {form.investmentThesis.length} chars
+              <div className="text-[10px] font-bold text-gray-400 mt-2 text-right uppercase tracking-widest">
+                {form.investmentThesis.length} characters
               </div>
             </Field>
 
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 checked={form.alertEnabled}
                 onChange={(e) => set('alertEnabled', e.target.checked)}
-                className="w-4 h-4 accent-accent-blue"
+                className="w-5 h-5 accent-blue-600 rounded-lg cursor-pointer"
               />
-              <span className="text-sm text-gray-400">Enable AI email briefings</span>
+              <span className="text-sm text-gray-500 font-bold group-hover:text-blue-600 transition-colors">Enable AI-powered email briefings</span>
             </label>
 
             {error && (
-              <div className="text-sm text-signal-sell bg-signal-sell/10 border border-signal-sell/20
-                              rounded-lg px-4 py-3">{error}</div>
+              <div className="text-sm font-bold text-red-600 bg-red-50 border border-red-100
+                              rounded-xl px-5 py-4 flex items-center gap-3 animate-shake">
+                <AlertTriangle size={18} /> {error}
+              </div>
             )}
           </div>
 
-          <div className="flex gap-3 mt-6">
-            <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-lg border border-surface-border
-                                                  text-gray-400 hover:text-white text-sm transition-colors">
+          <div className="flex gap-4 mt-10">
+            <button onClick={onClose} className="flex-1 px-6 py-4 rounded-xl border border-gray-200
+                                                  text-gray-500 hover:text-gray-900 font-bold text-sm transition-all hover:bg-gray-50">
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex-1 px-4 py-2.5 rounded-lg bg-accent-blue hover:bg-blue-500
-                         text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-4 rounded-xl bg-blue-600 hover:bg-blue-700
+                         text-white font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-500/20"
             >
-              {loading ? <><Loader2 size={14} className="animate-spin" /> Adding...</> : 'Add Holding'}
+              {loading ? <><Loader2 size={18} className="animate-spin" /> Working...</> : 'Add Position'}
             </button>
           </div>
         </div>
@@ -258,12 +266,12 @@ export function AddHoldingModal({ onClose, onSuccess }: { onClose: () => void; o
   );
 }
 
-function Field({ label, children, hint, placeholder }: any) {
+function Field({ label, children, hint }: any) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 mb-1.5">{label}</label>
+      <label className="block text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">{label}</label>
       {children}
-      {hint && <p className="text-[10px] text-gray-600 mt-1">{hint}</p>}
+      {hint && <p className="text-[10px] font-bold text-gray-400 mt-2">{hint}</p>}
     </div>
   );
 }
